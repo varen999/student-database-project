@@ -1,15 +1,19 @@
 from flask import Flask, render_template
 import mysql.connector
+import os
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
+    # Get password from environment variable
+    db_password = os.getenv("DB_PASSWORD")
+
     # Connect to MySQL
     db = mysql.connector.connect(
         host="localhost",
         user="root",
-        password="varensql",   # 👈 replace with your password
+        password=db_password,
         database="student_db"
     )
 
@@ -19,7 +23,6 @@ def home():
     cursor.execute("SELECT * FROM students")
     data = cursor.fetchall()
 
-    # Close connection
     cursor.close()
     db.close()
 
